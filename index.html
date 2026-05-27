@@ -133,6 +133,7 @@ button:hover{
     text-align:center;
     font-size:32px;
     font-weight:bold;
+    min-height:60px;
 }
 
 .score{
@@ -206,11 +207,10 @@ button:hover{
 
             <div class="character-box">
 
-                <!-- 웃는 사진 -->
                 <img
                 id="character"
-                src="none.jpg"
-                alt="캐릭터">
+                src="https://i.imgur.com/9M0K6sM.png"
+                alt="고양이">
 
             </div>
 
@@ -231,12 +231,12 @@ button:hover{
                 <input
                 type="text"
                 id="presentAnswer"
-                placeholder="원형 입력!">
+                placeholder="원형 입력">
 
                 <input
                 type="text"
                 id="pastAnswer"
-                placeholder="과거형 입력!">
+                placeholder="과거형 입력">
 
                 <div class="button-group">
 
@@ -314,16 +314,16 @@ button:hover{
 
 <script>
 
-// ===== 캐릭터 이미지 =====
+// ===== 이미지 =====
 
-const noneImage =
-"none.jpg";
-    
+const normalImage =
+"https://i.imgur.com/9M0K6sM.png";
+
 const happyImage =
-"happy.jpg";
+"https://i.imgur.com/jg7Lw6B.png";
 
 const sadImage =
-"sad.jpg";
+"https://i.imgur.com/JqEuJ6t.png";
 
 // ===== 단어 데이터 =====
 
@@ -351,10 +351,9 @@ let words = JSON.parse(
 
 ];
 
-// ===== 기본 변수 =====
+// ===== 변수 =====
 
 let currentWord = {};
-let currentMode = "";
 let score = 0;
 
 // ===== 저장 =====
@@ -367,7 +366,7 @@ function saveWords(){
     );
 }
 
-// ===== 랜덤 문제 =====
+// ===== 문제 불러오기 =====
 
 function loadQuestion(){
 
@@ -378,7 +377,32 @@ function loadQuestion(){
         )
     ];
 
-  function checkAnswer(){
+    document.getElementById(
+        "question"
+    ).innerText =
+    currentWord.meaning;
+
+    document.getElementById(
+        "presentAnswer"
+    ).value = "";
+
+    document.getElementById(
+        "pastAnswer"
+    ).value = "";
+
+    document.getElementById(
+        "result"
+    ).innerHTML = "";
+
+    document.getElementById(
+        "character"
+    ).src =
+    normalImage;
+}
+
+// ===== 정답 확인 =====
+
+function checkAnswer(){
 
     const presentAnswer =
     document.getElementById(
@@ -405,11 +429,17 @@ function loadQuestion(){
     .toLowerCase();
 
     if(
-        presentAnswer === correctPresent &&
+        presentAnswer === correctPresent
+        &&
         pastAnswer === correctPast
     ){
 
         score++;
+
+        document.getElementById(
+            "score"
+        ).innerText =
+        score;
 
         document.getElementById(
             "result"
@@ -420,11 +450,6 @@ function loadQuestion(){
             "result"
         ).style.color =
         "green";
-
-        document.getElementById(
-            "score"
-        ).innerText =
-        score;
 
         document.getElementById(
             "character"
@@ -458,96 +483,7 @@ function loadQuestion(){
         sadImage;
     }
 
-    setTimeout(loadQuestion,2500);
-}
-    document.getElementById(
-        "answer"
-    ).value = "";
-
-    document.getElementById(
-        "result"
-    ).innerHTML = "";
-
-    document.getElementById(
-        "character"
-    ).src =
-    noneImage;
-}
-
-// ===== 정답 확인 =====
-
-function checkAnswer(){
-
-    const userAnswer =
-    document.getElementById(
-        "answer"
-    )
-    .value
-    .trim()
-    .toLowerCase();
-
-    let correctAnswer = "";
-
-    if(currentMode === "present"){
-
-        correctAnswer =
-        currentWord.present
-        .toLowerCase();
-
-    }else{
-
-        correctAnswer =
-        currentWord.past
-        .toLowerCase();
-    }
-
-    if(userAnswer === correctAnswer){
-
-        score++;
-
-        document.getElementById(
-            "result"
-        ).innerHTML =
-        "😻 정답이다 냥!";
-
-        document.getElementById(
-            "result"
-        ).style.color =
-        "green";
-
-        document.getElementById(
-            "score"
-        ).innerText =
-        score;
-
-        document.getElementById(
-            "character"
-        ).src =
-        happyImage;
-
-    }else{
-
-        document.getElementById(
-            "result"
-        ).innerHTML =
-        `
-        😿 틀렸어!<br>
-        정답 :
-        ${correctAnswer}
-        `;
-
-        document.getElementById(
-            "result"
-        ).style.color =
-        "red";
-
-        document.getElementById(
-            "character"
-        ).src =
-        sadImage;
-    }
-
-    setTimeout(loadQuestion,2500);
+    setTimeout(loadQuestion,2000);
 }
 
 // ===== 단어 추가 =====
@@ -665,6 +601,19 @@ function speakQuestion(){
 
     speechSynthesis.speak(speech);
 }
+
+// ===== 엔터키 제출 =====
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            checkAnswer();
+        }
+    }
+);
 
 // ===== 시작 =====
 
