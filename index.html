@@ -230,8 +230,13 @@ button:hover{
 
                 <input
                 type="text"
-                id="answer"
-                placeholder="정답 입력!">
+                id="presentAnswer"
+                placeholder="원형 입력!">
+
+                <input
+                type="text"
+                id="pastAnswer"
+                placeholder="과거형 입력!">
 
                 <div class="button-group">
 
@@ -373,40 +378,88 @@ function loadQuestion(){
         )
     ];
 
-    const randomType =
-    Math.floor(Math.random() * 2);
+  function checkAnswer(){
 
-    if(randomType === 0){
+    const presentAnswer =
+    document.getElementById(
+        "presentAnswer"
+    )
+    .value
+    .trim()
+    .toLowerCase();
 
-        currentMode = "present";
+    const pastAnswer =
+    document.getElementById(
+        "pastAnswer"
+    )
+    .value
+    .trim()
+    .toLowerCase();
+
+    const correctPresent =
+    currentWord.present
+    .toLowerCase();
+
+    const correctPast =
+    currentWord.past
+    .toLowerCase();
+
+    if(
+        presentAnswer === correctPresent &&
+        pastAnswer === correctPast
+    ){
+
+        score++;
 
         document.getElementById(
-            "question"
+            "result"
         ).innerHTML =
-        `
-        ${currentWord.meaning}
-        <br>
-        <small>
-        (원형 쓰기)
-        </small>
-        `;
+        "😻 둘 다 정답이다 냥!";
+
+        document.getElementById(
+            "result"
+        ).style.color =
+        "green";
+
+        document.getElementById(
+            "score"
+        ).innerText =
+        score;
+
+        document.getElementById(
+            "character"
+        ).src =
+        happyImage;
 
     }else{
 
-        currentMode = "past";
-
         document.getElementById(
-            "question"
+            "result"
         ).innerHTML =
         `
-        ${currentWord.meaning}
+        😿 틀렸어!<br><br>
+
+        원형 :
+        ${correctPresent}
         <br>
-        <small>
-        (과거형 쓰기)
-        </small>
+
+        과거형 :
+        ${correctPast}
         `;
+
+        document.getElementById(
+            "result"
+        ).style.color =
+        "red";
+
+        document.getElementById(
+            "character"
+        ).src =
+        sadImage;
     }
 
+    setTimeout(loadQuestion,2500);
+}
     document.getElementById(
         "answer"
     ).value = "";
