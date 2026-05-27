@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>🐱 냥냥 단어 테스트</title>
+
+<style>
+
+body{
+
+    margin:0;
+    padding:20px;
+    background:#fff7fa;
+    font-family:Arial,sans-serif;
+}
+
+.container{
+
+    max-width:900px;
+    margin:auto;
+}
+
+.title{
+
+    text-align:center;
+    font-size:42px;
+    color:#ff5fa2;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.quiz-box{
+
+    background:white;
+    border-radius:30px;
+    padding:30px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.top{
+
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+    align-items:center;
+}
+
+.character-box{
+
+    flex:1;
+    min-width:250px;
+    text-align:center;
+}
+
+.character-box img{
+
+    width:100%;
+    max-width:320px;
+    border-radius:25px;
+    border:6px solid #ffd1e5;
+}
+
+.quiz-area{
+
+    flex:1;
+    min-width:250px;
+}
+
+.question-title{
+
+    font-size:24px;
+    color:#ff5fa2;
+    margin-bottom:10px;
+}
+
+.question{
+
+    background:#fff2bf;
+    border-radius:25px;
+    padding:30px;
+    font-size:44px;
+    text-align:center;
+    font-weight:bold;
+    color:#6b3d20;
+    margin-bottom:20px;
+}
+
+input{
+
+    width:100%;
+    padding:18px;
+    border-radius:18px;
+    border:3px solid #ffc2db;
+    font-size:24px;
+    box-sizing:border-box;
+    margin-top:10px;
+}
+
+.button-group{
+
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+button{
+
+    flex:1;
+    border:none;
+    padding:16px;
+    border-radius:18px;
+    background:#ff5fa2;
+    color:white;
+    font-size:22px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+
+    opacity:0.9;
+}
+
+.result{
+
+    margin-top:25px;
+    text-align:center;
+    font-size:32px;
+    font-weight:bold;
+}
+
+.score{
+
+    margin-top:15px;
+    text-align:center;
+    font-size:28px;
+    color:#ff5fa2;
+    font-weight:bold;
+}
+
+.admin{
+
+    margin-top:30px;
+    background:white;
+    border-radius:30px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.admin h2{
+
+    color:#7b4b31;
+}
+
+.word-item{
+
+    background:#fff0f6;
+    padding:12px;
+    border-radius:15px;
+    margin-top:10px;
+    font-size:20px;
+}
+
+.delete-btn{
+
+    background:red;
+    font-size:16px;
+    padding:8px 14px;
+    margin-left:10px;
+}
+
+@media(max-width:700px){
+
+    .question{
+
+        font-size:34px;
+    }
+
+    button{
+
+        font-size:18px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title">
+        🐱 냥냥 단어 테스트
+    </div>
+
+    <div class="quiz-box">
+
+        <div class="top">
+
+            <div class="character-box">
+
+                <!-- 웃는 사진 -->
+                <img
+                id="character"
+                src="happy.jpg"
+                alt="캐릭터">
+
+            </div>
+
+            <div class="quiz-area">
+
+                <div class="question-title">
+                    🐾 랜덤 문제
+                </div>
+
+                <div
+                class="question"
+                id="question">
+
+                문제 불러오는 중...
+
+                </div>
+
+                <input
+                type="text"
+                id="answer"
+                placeholder="정답 입력!">
+
+                <div class="button-group">
+
+                    <button
+                    onclick="checkAnswer()">
+
+                    정답 확인
+
+                    </button>
+
+                    <button
+                    onclick="speakQuestion()">
+
+                    🔊 읽기
+
+                    </button>
+
+                </div>
+
+                <div
+                class="result"
+                id="result">
+
+                </div>
+
+                <div class="score">
+
+                    ⭐ 점수 :
+                    <span id="score">0</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="admin">
+
+        <h2>
+            🐾 관리자 단어 추가
+        </h2>
+
+        <input
+        type="text"
+        id="newMeaning"
+        placeholder="뜻 입력">
+
+        <input
+        type="text"
+        id="newPresent"
+        placeholder="원형 입력">
+
+        <input
+        type="text"
+        id="newPast"
+        placeholder="과거형 입력">
+
+        <div class="button-group">
+
+            <button onclick="addWord()">
+
+                단어 추가
+
+            </button>
+
+        </div>
+
+        <div id="wordList"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+// ===== 캐릭터 이미지 =====
+
+const happyImage =
+"happy.jpg";
+
+const sadImage =
+"sad.jpg";
+
+// ===== 단어 데이터 =====
+
+let words = JSON.parse(
+    localStorage.getItem("catWords")
+) || [
+
+    {
+        meaning:"가다",
+        present:"go",
+        past:"went"
+    },
+
+    {
+        meaning:"먹다",
+        present:"eat",
+        past:"ate"
+    },
+
+    {
+        meaning:"보다",
+        present:"see",
+        past:"saw"
+    }
+
+];
+
+// ===== 기본 변수 =====
+
+let currentWord = {};
+let currentMode = "";
+let score = 0;
+
+// ===== 저장 =====
+
+function saveWords(){
+
+    localStorage.setItem(
+        "catWords",
+        JSON.stringify(words)
+    );
+}
+
+// ===== 랜덤 문제 =====
+
+function loadQuestion(){
+
+    currentWord =
+    words[
+        Math.floor(
+            Math.random() * words.length
+        )
+    ];
+
+    const randomType =
+    Math.floor(Math.random() * 2);
+
+    if(randomType === 0){
+
+        currentMode = "present";
+
+        document.getElementById(
+            "question"
+        ).innerHTML =
+        `
+        ${currentWord.meaning}
+        <br>
+        <small>
+        (원형 쓰기)
+        </small>
+        `;
+
+    }else{
+
+        currentMode = "past";
+
+        document.getElementById(
+            "question"
+        ).innerHTML =
+        `
+        ${currentWord.meaning}
+        <br>
+        <small>
+        (과거형 쓰기)
+        </small>
+        `;
+    }
+
+    document.getElementById(
+        "answer"
+    ).value = "";
+
+    document.getElementById(
+        "result"
+    ).innerHTML = "";
+
+    document.getElementById(
+        "character"
+    ).src =
+    happyImage;
+}
+
+// ===== 정답 확인 =====
+
+function checkAnswer(){
+
+    const userAnswer =
+    document.getElementById(
+        "answer"
+    )
+    .value
+    .trim()
+    .toLowerCase();
+
+    let correctAnswer = "";
+
+    if(currentMode === "present"){
+
+        correctAnswer =
+        currentWord.present
+        .toLowerCase();
+
+    }else{
+
+        correctAnswer =
+        currentWord.past
+        .toLowerCase();
+    }
+
+    if(userAnswer === correctAnswer){
+
+        score++;
+
+        document.getElementById(
+            "result"
+        ).innerHTML =
+        "😻 정답이다 냥!";
+
+        document.getElementById(
+            "result"
+        ).style.color =
+        "green";
+
+        document.getElementById(
+            "score"
+        ).innerText =
+        score;
+
+        document.getElementById(
+            "character"
+        ).src =
+        happyImage;
+
+    }else{
+
+        document.getElementById(
+            "result"
+        ).innerHTML =
+        `
+        😿 틀렸어!<br>
+        정답 :
+        ${correctAnswer}
+        `;
+
+        document.getElementById(
+            "result"
+        ).style.color =
+        "red";
+
+        document.getElementById(
+            "character"
+        ).src =
+        sadImage;
+    }
+
+    setTimeout(loadQuestion,2500);
+}
+
+// ===== 단어 추가 =====
+
+function addWord(){
+
+    const meaning =
+    document.getElementById(
+        "newMeaning"
+    ).value.trim();
+
+    const present =
+    document.getElementById(
+        "newPresent"
+    ).value.trim();
+
+    const past =
+    document.getElementById(
+        "newPast"
+    ).value.trim();
+
+    if(
+        !meaning ||
+        !present ||
+        !past
+    ){
+
+        alert("모두 입력해줘!");
+        return;
+    }
+
+    words.push({
+
+        meaning:meaning,
+        present:present,
+        past:past
+
+    });
+
+    saveWords();
+
+    renderWords();
+
+    document.getElementById(
+        "newMeaning"
+    ).value = "";
+
+    document.getElementById(
+        "newPresent"
+    ).value = "";
+
+    document.getElementById(
+        "newPast"
+    ).value = "";
+}
+
+// ===== 단어 삭제 =====
+
+function deleteWord(index){
+
+    words.splice(index,1);
+
+    saveWords();
+
+    renderWords();
+}
+
+// ===== 단어 목록 =====
+
+function renderWords(){
+
+    const list =
+    document.getElementById(
+        "wordList"
+    );
+
+    list.innerHTML = "";
+
+    words.forEach((item,index)=>{
+
+        list.innerHTML += `
+
+        <div class="word-item">
+
+            ${item.meaning}
+            =
+            ${item.present}
+            /
+            ${item.past}
+
+            <button
+            class="delete-btn"
+            onclick="deleteWord(${index})">
+
+            삭제
+
+            </button>
+
+        </div>
+
+        `;
+    });
+}
+
+// ===== 문제 읽기 =====
+
+function speakQuestion(){
+
+    const speech =
+    new SpeechSynthesisUtterance(
+        currentWord.meaning
+    );
+
+    speech.lang = "ko-KR";
+
+    speechSynthesis.speak(speech);
+}
+
+// ===== 시작 =====
+
+renderWords();
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
