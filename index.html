@@ -1,19 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🐱 냥냥 단어 테스트</title>
 
 <style>
 
 body{
-
     margin:0;
     padding:20px;
     background:#fff7fa;
@@ -21,13 +15,11 @@ body{
 }
 
 .container{
-
     max-width:900px;
     margin:auto;
 }
 
 .title{
-
     text-align:center;
     font-size:42px;
     color:#ff5fa2;
@@ -36,7 +28,6 @@ body{
 }
 
 .quiz-box{
-
     background:white;
     border-radius:30px;
     padding:30px;
@@ -44,7 +35,6 @@ body{
 }
 
 .top{
-
     display:flex;
     gap:30px;
     flex-wrap:wrap;
@@ -52,35 +42,19 @@ body{
 }
 
 .character-box{
-
     flex:1;
     min-width:250px;
     text-align:center;
 }
 
 .character-box img{
-
     width:100%;
     max-width:320px;
     border-radius:25px;
     border:6px solid #ffd1e5;
 }
 
-.quiz-area{
-
-    flex:1;
-    min-width:250px;
-}
-
-.question-title{
-
-    font-size:24px;
-    color:#ff5fa2;
-    margin-bottom:10px;
-}
-
 .question{
-
     background:#fff2bf;
     border-radius:25px;
     padding:30px;
@@ -92,7 +66,6 @@ body{
 }
 
 input{
-
     width:100%;
     padding:18px;
     border-radius:18px;
@@ -103,14 +76,12 @@ input{
 }
 
 .button-group{
-
     display:flex;
     gap:10px;
     margin-top:15px;
 }
 
 button{
-
     flex:1;
     border:none;
     padding:16px;
@@ -123,12 +94,10 @@ button{
 }
 
 button:hover{
-
     opacity:0.9;
 }
 
 .result{
-
     margin-top:25px;
     text-align:center;
     font-size:32px;
@@ -137,7 +106,6 @@ button:hover{
 }
 
 .score{
-
     margin-top:15px;
     text-align:center;
     font-size:28px;
@@ -145,22 +113,14 @@ button:hover{
     font-weight:bold;
 }
 
-.admin{
-
-    margin-top:30px;
-    background:white;
-    border-radius:30px;
-    padding:25px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
-}
-
-.admin h2{
-
-    color:#7b4b31;
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
 }
 
 .word-item{
-
     background:#fff0f6;
     padding:12px;
     border-radius:15px;
@@ -169,144 +129,52 @@ button:hover{
 }
 
 .delete-btn{
-
     background:red;
     font-size:16px;
     padding:8px 14px;
     margin-left:10px;
 }
 
-@media(max-width:700px){
-
-    .question{
-
-        font-size:34px;
-    }
-
-    button{
-
-        font-size:18px;
-    }
-}
-
 </style>
-
 </head>
 
 <body>
 
+<canvas id="canvas"></canvas>
+
 <div class="container">
 
-    <div class="title">
-        🐱 냥냥 단어 테스트
-    </div>
+    <div class="title">🐱 냥냥 단어 테스트</div>
 
     <div class="quiz-box">
 
         <div class="top">
 
             <div class="character-box">
-
-                <img
-                id="character"
-                src="https://i.imgur.com/9M0K6sM.png"
-                alt="고양이">
-
+                <img id="character" src="">
             </div>
 
-            <div class="quiz-area">
+            <div style="flex:1;min-width:250px;">
 
-                <div class="question-title">
-                    🐾 랜덤 문제
-                </div>
+                <div class="question" id="question">로딩중...</div>
 
-                <div
-                class="question"
-                id="question">
-
-                문제 불러오는 중...
-
-                </div>
-
-                <input
-                type="text"
-                id="presentAnswer"
-                placeholder="원형 입력">
-
-                <input
-                type="text"
-                id="pastAnswer"
-                placeholder="과거형 입력">
+                <input id="presentAnswer" placeholder="원형 입력">
+                <input id="pastAnswer" placeholder="과거형 입력">
 
                 <div class="button-group">
-
-                    <button
-                    onclick="checkAnswer()">
-
-                    정답 확인
-
-                    </button>
-
-                    <button
-                    onclick="speakQuestion()">
-
-                    🔊 읽기
-
-                    </button>
-
+                    <button onclick="checkAnswer()">정답 확인</button>
+                    <button onclick="speakQuestion()">🔊 읽기</button>
                 </div>
 
-                <div
-                class="result"
-                id="result">
-
-                </div>
+                <div class="result" id="result"></div>
 
                 <div class="score">
-
-                    ⭐ 점수 :
-                    <span id="score">0</span>
-
+                    ⭐ 점수 : <span id="score">0</span>
                 </div>
 
             </div>
 
         </div>
-
-    </div>
-
-    <div class="admin">
-
-        <h2>
-            🐾 관리자 단어 추가
-        </h2>
-
-        <input
-        type="text"
-        id="newMeaning"
-        placeholder="뜻 입력">
-
-        <input
-        type="text"
-        id="newPresent"
-        placeholder="원형 입력">
-
-        <input
-        type="text"
-        id="newPast"
-        placeholder="과거형 입력">
-
-        <div class="button-group">
-
-            <button onclick="addWord()">
-
-                단어 추가
-
-            </button>
-
-        </div>
-
-        <div id="wordList"></div>
 
     </div>
 
@@ -314,310 +182,183 @@ button:hover{
 
 <script>
 
-// ===== 이미지 =====
+// ===============================
+// 📌 GitHub Pages 이미지 경로 안정화
+// ===============================
 
-const normalImage =
-"https://i.imgur.com/9M0K6sM.png";
+const baseURL = "https://fiona-aji.github.io/wordtest/";
 
-const happyImage =
-"https://i.imgur.com/jg7Lw6B.png";
+const normalImage = baseURL + "none.jpg";
+const happyImage  = baseURL + "happy.jpg";
+const sadImage    = baseURL + "sad.jpg";
 
-const sadImage =
-"https://i.imgur.com/JqEuJ6t.png";
+// ===============================
+// 📌 데이터
+// ===============================
 
-// ===== 단어 데이터 =====
-
-let words = JSON.parse(
-    localStorage.getItem("catWords")
-) || [
-
-    {
-        meaning:"가다",
-        present:"go",
-        past:"went"
-    },
-
-    {
-        meaning:"먹다",
-        present:"eat",
-        past:"ate"
-    },
-
-    {
-        meaning:"보다",
-        present:"see",
-        past:"saw"
-    }
-
+let words = JSON.parse(localStorage.getItem("catWords")) || [
+    {meaning:"가다", present:"go", past:"went"},
+    {meaning:"먹다", present:"eat", past:"ate"},
+    {meaning:"보다", present:"see", past:"saw"}
 ];
 
-// ===== 변수 =====
+let wrongWords = JSON.parse(localStorage.getItem("wrongWords")) || [];
 
 let currentWord = {};
 let score = 0;
 
-// ===== 저장 =====
+// ===============================
+// 📌 저장
+// ===============================
 
-function saveWords(){
-
-    localStorage.setItem(
-        "catWords",
-        JSON.stringify(words)
-    );
+function saveAll(){
+    localStorage.setItem("catWords", JSON.stringify(words));
+    localStorage.setItem("wrongWords", JSON.stringify(wrongWords));
 }
 
-// ===== 문제 불러오기 =====
+// ===============================
+// 📌 문제 선택 (틀린 문제 우선)
+// ===============================
+
+function getWord(){
+
+    if(wrongWords.length > 0 && Math.random() < 0.5){
+        return wrongWords[Math.floor(Math.random() * wrongWords.length)];
+    }
+
+    return words[Math.floor(Math.random() * words.length)];
+}
+
+// ===============================
+// 📌 문제 로드
+// ===============================
 
 function loadQuestion(){
 
-    currentWord =
-    words[
-        Math.floor(
-            Math.random() * words.length
-        )
-    ];
+    currentWord = getWord();
 
-    document.getElementById(
-        "question"
-    ).innerText =
+    document.getElementById("question").innerText =
     currentWord.meaning;
 
-    document.getElementById(
-        "presentAnswer"
-    ).value = "";
+    document.getElementById("presentAnswer").value = "";
+    document.getElementById("pastAnswer").value = "";
+    document.getElementById("result").innerHTML = "";
 
-    document.getElementById(
-        "pastAnswer"
-    ).value = "";
-
-    document.getElementById(
-        "result"
-    ).innerHTML = "";
-
-    document.getElementById(
-        "character"
-    ).src =
-    normalImage;
+    document.getElementById("character").src = normalImage;
 }
 
-// ===== 정답 확인 =====
+// ===============================
+// 📌 정답 체크
+// ===============================
 
 function checkAnswer(){
 
-    const presentAnswer =
-    document.getElementById(
-        "presentAnswer"
-    )
-    .value
-    .trim()
-    .toLowerCase();
+    const p = document.getElementById("presentAnswer").value.trim().toLowerCase();
+    const pa = document.getElementById("pastAnswer").value.trim().toLowerCase();
 
-    const pastAnswer =
-    document.getElementById(
-        "pastAnswer"
-    )
-    .value
-    .trim()
-    .toLowerCase();
+    const ok = (p === currentWord.present && pa === currentWord.past);
 
-    const correctPresent =
-    currentWord.present
-    .toLowerCase();
-
-    const correctPast =
-    currentWord.past
-    .toLowerCase();
-
-    if(
-        presentAnswer === correctPresent
-        &&
-        pastAnswer === correctPast
-    ){
+    if(ok){
 
         score++;
+        document.getElementById("score").innerText = score;
 
-        document.getElementById(
-            "score"
-        ).innerText =
-        score;
+        document.getElementById("result").innerHTML = "😻 정답!";
+        document.getElementById("result").style.color = "green";
 
-        document.getElementById(
-            "result"
-        ).innerHTML =
-        "😻 둘 다 정답이다 냥!";
+        document.getElementById("character").src = happyImage;
 
-        document.getElementById(
-            "result"
-        ).style.color =
-        "green";
+        // 틀린 리스트에서 제거
+        wrongWords = wrongWords.filter(w => w.meaning !== currentWord.meaning);
 
-        document.getElementById(
-            "character"
-        ).src =
-        happyImage;
+        launchFireworks();
 
     }else{
 
-        document.getElementById(
-            "result"
-        ).innerHTML =
-        `
-        😿 틀렸어!<br><br>
+        document.getElementById("result").innerHTML =
+        `😿 틀림!<br>${currentWord.present} / ${currentWord.past}`;
+        document.getElementById("result").style.color = "red";
 
-        원형 :
-        ${correctPresent}
-        <br>
+        document.getElementById("character").src = sadImage;
 
-        과거형 :
-        ${correctPast}
-        `;
-
-        document.getElementById(
-            "result"
-        ).style.color =
-        "red";
-
-        document.getElementById(
-            "character"
-        ).src =
-        sadImage;
-    }
-
-    setTimeout(loadQuestion,2000);
-}
-
-// ===== 단어 추가 =====
-
-function addWord(){
-
-    const meaning =
-    document.getElementById(
-        "newMeaning"
-    ).value.trim();
-
-    const present =
-    document.getElementById(
-        "newPresent"
-    ).value.trim();
-
-    const past =
-    document.getElementById(
-        "newPast"
-    ).value.trim();
-
-    if(
-        !meaning ||
-        !present ||
-        !past
-    ){
-
-        alert("모두 입력해줘!");
-        return;
-    }
-
-    words.push({
-
-        meaning:meaning,
-        present:present,
-        past:past
-
-    });
-
-    saveWords();
-
-    renderWords();
-
-    document.getElementById(
-        "newMeaning"
-    ).value = "";
-
-    document.getElementById(
-        "newPresent"
-    ).value = "";
-
-    document.getElementById(
-        "newPast"
-    ).value = "";
-}
-
-// ===== 단어 삭제 =====
-
-function deleteWord(index){
-
-    words.splice(index,1);
-
-    saveWords();
-
-    renderWords();
-}
-
-// ===== 단어 목록 =====
-
-function renderWords(){
-
-    const list =
-    document.getElementById(
-        "wordList"
-    );
-
-    list.innerHTML = "";
-
-    words.forEach((item,index)=>{
-
-        list.innerHTML += `
-
-        <div class="word-item">
-
-            ${item.meaning}
-            =
-            ${item.present}
-            /
-            ${item.past}
-
-            <button
-            class="delete-btn"
-            onclick="deleteWord(${index})">
-
-            삭제
-
-            </button>
-
-        </div>
-
-        `;
-    });
-}
-
-// ===== 문제 읽기 =====
-
-function speakQuestion(){
-
-    const speech =
-    new SpeechSynthesisUtterance(
-        currentWord.meaning
-    );
-
-    speech.lang = "ko-KR";
-
-    speechSynthesis.speak(speech);
-}
-
-// ===== 엔터키 제출 =====
-
-document.addEventListener(
-    "keydown",
-    function(event){
-
-        if(event.key === "Enter"){
-
-            checkAnswer();
+        // 틀린 문제 추가
+        if(!wrongWords.find(w => w.meaning === currentWord.meaning)){
+            wrongWords.push(currentWord);
         }
     }
-);
 
-// ===== 시작 =====
+    saveAll();
 
-renderWords();
+    setTimeout(loadQuestion, 1800);
+}
+
+// ===============================
+// 📌 음성
+// ===============================
+
+function speakQuestion(){
+    speechSynthesis.speak(
+        new SpeechSynthesisUtterance(currentWord.meaning)
+    );
+}
+
+// ===============================
+// 📌 엔터키
+// ===============================
+
+document.getElementById("pastAnswer").addEventListener("keydown",(e)=>{
+    if(e.key === "Enter") checkAnswer();
+});
+
+// ===============================
+// 📌 폭죽 효과
+// ===============================
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let particles = [];
+
+function launchFireworks(){
+
+    for(let i=0;i<90;i++){
+        particles.push({
+            x: innerWidth/2,
+            y: innerHeight/2,
+            vx:(Math.random()-0.5)*10,
+            vy:(Math.random()-0.5)*10,
+            life:100
+        });
+    }
+}
+
+function animate(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p,i)=>{
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+
+        ctx.fillStyle = "#ff4fa3";
+        ctx.fillRect(p.x,p.y,4,4);
+
+        if(p.life <= 0) particles.splice(i,1);
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+// ===============================
+// 📌 시작
+// ===============================
 
 loadQuestion();
 
