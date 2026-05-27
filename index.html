@@ -197,9 +197,16 @@ const sadImage    = "./sad.jpg";
 // ===============================
 
 let words = JSON.parse(localStorage.getItem("catWords")) || [
-    {meaning:"가다", present:"go", past:"went"},
-    {meaning:"먹다", present:"eat", past:"ate"},
-    {meaning:"보다", present:"see", past:"saw"}
+    {meaning:"이다", present:"is", past:"was"},
+    {meaning:"낳다/참다", present:"bear", past:"bore"},
+    {meaning:"이기다", present:"beat", past:"beat"}
+    {meaning:"~이 되다", present:"become", past:"became"},
+    {meaning:"시작하다", present:"begin", past:"began"},
+    {meaning:"구부리다", present:"bend", past:"bent"}
+    {meaning:"묶다", present:"bind", past:"bound"},
+    {meaning:"물다", present:"bite", past:"bit"},
+    {meaning:"피를 흘리다", present:"bleed", past:"bled"}
+    {meaning:"깨다", present:"break", past:"broke"}
 ];
 
 let wrongWords = JSON.parse(localStorage.getItem("wrongWords")) || [];
